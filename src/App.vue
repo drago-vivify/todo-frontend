@@ -1,21 +1,22 @@
 <template>
   <div id="app">
     <div class="container">
-      some bootstrapped text
-      <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
-    </div>
+      <app-new-todo></app-new-todo>
     </div>
   </div>
 </template>
 
 <script>
+import NewTodo from './components/New-todo.vue'
+
+
 export default {
-  name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
+  },
+  components: {
+    'app-new-todo': NewTodo
   }
 }
 </script>
