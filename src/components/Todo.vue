@@ -26,10 +26,11 @@
         </div>
 
         <div class="buttons-container text-right">
-            <a @click="onDelete" class="btn btn-link">
+            <a id='edit-button'
+                 @click="onEdit" class="btn btn-link">
                 <i class="fas fa-pen"></i>
             </a>
-            <a @click="onDelete" class="btn btn-link">
+            <a id='delete-button' @click="onDelete" class="btn btn-link">
                 <i class="far fa-trash-alt"></i>
             </a>
         </div>
@@ -40,11 +41,25 @@
 export default {
     props: ['todo'],
     methods: {
-        onDelete() {
-            console.log('DELETING: ', this.todo);
+        onEdit() {
+            this.$emit('edit', this.todo);
         },
         toggleDone() {
-            this.todo.done = !this.todo.done;
+            const temp = {
+                id: this.todo.id,
+                content: this.todo.content,
+                priority: this.todo.priority,
+                done: !this.todo.done
+            }
+            this.$axios.put('todos/' + this.todo.id, temp)
+                .then(response => this.$emit('doneChanged', response.data))
+                .catch(err => console.log(err));
+        },  
+        onDelete() {
+            console.log('deleting');
+            this.$axios.delete('todos/' + this.todo.id)
+                .then(response => this.$emit('deleted', response.data))
+                .catch(err => console.log(err));
         }
     }
 }
@@ -59,10 +74,6 @@ export default {
         display: flex;
         flex-direction: row;
     }
-    // .todo-container>div {
-    //     vertical-align: middle;
-    //     border: 1px solid red;
-    // }
 
     .done-container {
         display: inline-block;
@@ -71,6 +82,7 @@ export default {
 
     .content-container {
         display: inline-block;    
+        padding-left:30px;
         width:70%;
     }
 
