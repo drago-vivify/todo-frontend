@@ -2,20 +2,26 @@
   <div id="app">
     <div class="container">
       <p class="title">MyTodo</p>
+      <div>
+        <router-link class="btn btn-link" :to="'/'">Home</router-link> |
+        <router-link class="btn btn-link" :to="'/login'">Sign in</router-link> |
+        <router-link class="btn btn-link" :to="'/register'">Sign up</router-link> |
+        <button class="btn btn-link" @click="logout">Log out </button> |
+      </div>
       <hr>
       <br>
-      <app-todo-list></app-todo-list>
+      <router-view></router-view>
     </div>
   </div>  
 </template>
 
 <script>
-import TodoList from './components/Todo-list.vue'
-
 
 export default {
-  components: {
-    'app-todo-list': TodoList
+  methods: {
+    logout() {
+      this.usersService.logout();
+    }
   }
 }
 </script>

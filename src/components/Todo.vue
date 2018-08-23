@@ -51,15 +51,12 @@ export default {
                 priority: this.todo.priority,
                 done: !this.todo.done
             }
-            this.$axios.put('todos/' + this.todo.id, temp)
+            this.todosService.editTodo(temp)
                 .then(response => this.$emit('doneChanged', response.data))
                 .catch(err => console.log(err));
         },  
         onDelete() {
-            console.log('deleting');
-            this.$axios.delete('todos/' + this.todo.id)
-                .then(response => this.$emit('deleted', response.data))
-                .catch(err => console.log(err));
+            this.$emit('delete', this.todo);
         }
     }
 }

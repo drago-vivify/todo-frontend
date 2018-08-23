@@ -8,7 +8,7 @@
                 v-bind:key="todo.id"
                 class="list-group-item">
 
-                <app-todo v-bind:todo="todo" @edit='onEdit' @deleted='onDeleted' @doneChanged='onEditedTodo'></app-todo>
+                <app-todo v-bind:todo="todo" @edit='onEdit' @delete='onDelete' @doneChanged='onEditedTodo'></app-todo>
 
             </div>
 
@@ -35,9 +35,9 @@ export default {
     methods: {
         fetchTodos() {
             // using axios api
-            this.$axios.get('todos')
+            this.todosService.getTodos()
                 .then(response => this.todos = response.data)
-                .catch(err => console.log(err));
+                .catch(error => console.log(error.response));
 
             // using browser's fetch api
             // fetch('http://localhost:8000/api/todos')
@@ -50,14 +50,14 @@ export default {
             //     .then(response => this.todos = response.body)
             //     .catch(error => console.error(error));
         },
-        onDeleted(todo) {
-            console.log(todo);
-            this.todos.splice(this.todos.findIndex(element => element.id == todo.id), 1);
+        onDelete(todo) {
+            this.todosService.deleteTodo(todo)
+                .then(response => this.todos.splice(this.todos.findIndex(element => element.id == response.data.id), 1))
+                .catch(err => console.log(err));
         },
 
         onAddedTodo(newTodo) {
             this.fetchTodos();
-            return;
         },
 
         onEdit(todo) {
@@ -66,7 +66,6 @@ export default {
         },
         onEditedTodo(todo) {
             let index = this.todos.findIndex(el => el.id==todo.id);
-            this.todos[index].content = "nema vise contenta";
             this.todos[index].content = todo.content;
             this.todos[index].priority = todo.priority;
             this.todos[index].done = todo.done;

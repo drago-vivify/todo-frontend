@@ -78,6 +78,7 @@ export default {
     },
     watch: {
         todoToEdit(val) {
+            console.log('val', val);
             if (val != null) {
                 this.editing = true;
                 this.content = val.content;
@@ -92,17 +93,17 @@ export default {
 
     methods: {
         onSubmitted(event) {
-
-            console.log('submitted');
-            console.log('editing:', this.editing);
             if (!this.editing) {
-                this.$axios.post('todos', {content:this.content, priority:this.priority, done:this.emptyTodo.done})
+                this.todosService.postTodo(this.content, this.priority)
                     .then(response => this.$emit('addedTodo', response.data))
-                    .catch(error => {
-                        console.log(error);
-                    });
+                    .catch(error => console.log(error));
             } else {
-                this.$axios.put('todos/' + this.toEdit.id, {content:this.content, priority:this.priority, done:this.toEdit.done})
+                this.todosService.editTodo({
+                                            id: this.toEdit.id, 
+                                            content:this.content, 
+                                            priority:this.priority, 
+                                            done:this.toEdit.done
+                                            })
                     .then(response => this.$emit('editedTodo', response.data))
                     .catch(error => {
                         console.log(error);
